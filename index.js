@@ -7,6 +7,34 @@ connectDB();
 
 app.use(express.json());
 
+const remoteHost = "https://api-9b-s7zy.onrender.com";
+
+const endpoints = [
+    { method: "GET", path: "/", description: "Página con lista de endpoints" },
+    { method: "POST", path: `${remoteHost}/createCard`, description: "Crear una nueva tarjeta" },
+    { method: "GET", path: `${remoteHost}/GetAllCards`, description: "Obtener todas las tarjetas" },
+    { method: "GET", path: `${remoteHost}/getCard/:id`, description: "Obtener una tarjeta por ID" },
+    { method: "GET", path: `${remoteHost}/hola`, description: "Endpoint de prueba" },
+    { method: "POST", path: `${remoteHost}/send`, description: "Enviar datos (user, email)" },
+    { method: "GET", path: `${remoteHost}/hello`, description: "Endpoint de prueba" }
+];
+
+app.get("/", (req, res) => {
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Endpoints</title>
+</head>
+<body>
+    <h1>API Endpoints</h1>
+    <pre>${JSON.stringify(endpoints, null, 2)}</pre>
+</body>
+</html>
+    `;
+    res.status(200).send(html);
+});
+
 app.post("/createCard", async (req, res) => {
     try {
         const { name, link, description } = req.body;
@@ -27,7 +55,7 @@ app.post("/createCard", async (req, res) => {
     }
 });
 
-app.get("/getAllCards", async (req, res) => {
+app.get("/GetAllCards", async (req, res) => {
     try {
         const cards = await Card.find();
         res.status(200).json(cards);
