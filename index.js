@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./db.js";
 import { Card } from "./models/cards.js";
+import fs from "fs";
+import csv from "csv-parser"; 
 
 const app = express();
 connectDB();
@@ -23,7 +25,8 @@ const endpoints = [
   { method: "GET", path: `${remoteHost}/getCard/:id`, description: "Obtener una tarjeta por ID" },
   { method: "GET", path: `${remoteHost}/hola`, description: "Endpoint de prueba" },
   { method: "POST", path: `${remoteHost}/send`, description: "Enviar datos (user, email)" },
-  { method: "GET", path: `${remoteHost}/hello`, description: "Endpoint de prueba" }
+  { method: "GET", path: `${remoteHost}/hello`, description: "Endpoint de prueba" },
+  { method: "GET", path: `${remoteHost}/api/datos`, description: "Obtener todos los registros del CSV" }
 ];
 
 app.get("/", (req, res) => {
@@ -86,7 +89,34 @@ app.post("/send", (req, res) => {
   res.status(200).send("Data received successfully");
 });
 
+
+let datos = [];
+let nextId = 1;
+
+app.get("/api/datos", (req, res) => {
+  res.status(200).json(datos);
+});
+
+app.post("/api/datos", (req, res) => {
+  const { Nombre, Apellido, Grupo, PuntosExtra } = req.body;
+
+  if (!Nombre || !Apellido || !Grupo || PuntosExtra === undefined) {
+    return res.status(400).json({ error: "Faltan campos requeridos" });
+  }
+
+  const nuevo = { id: nextId++, Nombre, Apellido, Grupo, PuntosExtra };
+  datos.push(nuevo);
+
+  res.status(201).json({ mensaje: "Dato agregado correctamente", data: nuevo });
+});
+
+app.delete("/api/datos", (req, res) => {
+  datos = [];
+  nextId = 1;
+  res.json({ mensaje: "Todos los datos fueron eliminados" });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto ${PORT}`);
+  console.log(`Servidor corriendo en puerto http://localhost:${PORT}`);
 });
