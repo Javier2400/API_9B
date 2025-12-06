@@ -110,11 +110,44 @@ app.post("/api/datos", (req, res) => {
   res.status(201).json({ mensaje: "Dato agregado correctamente", data: nuevo });
 });
 
-app.delete("/api/datos", (req, res) => {
-  datos = [];
-  nextId = 1;
-  res.json({ mensaje: "Todos los datos fueron eliminados" });
+app.delete("/deleteCard/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const deleted = await Card.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Card no encontrada" });
+    }
+
+    res.status(200).json({ message: "Card eliminada", deleted });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
 });
+
+app.put("/likeCard/:id", async (req, res) => {
+  try {
+    const { action } = req.body; 
+    
+    const card = await Card.findById(req.params.id);
+    if (!card) return res.status(404).json({ message: "Card no encontrada" });
+
+    if (action === "like") {
+      card.likes += 1;
+    } else if (action === "unlike") {
+      card.likes = Math.max(0, card.likes - 1);
+    }
+
+    await card.save();
+
+    res.status(200).json({ message: "Like actualizado", likes: card.likes });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
