@@ -9,12 +9,19 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://exone.onrender.com"], 
+  origin: [
+    "http://localhost:5173",
+    "https://exone.onrender.com",
+    "https://api-9b-s7zy.onrender.com"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
 
+
 app.use(express.json());
+
 
 const remoteHost = "https://api-9b-s7zy.onrender.com";
 
@@ -126,27 +133,23 @@ app.delete("/deleteCard/:id", async (req, res) => {
   }
 });
 
-app.put("/likeCard/:id", async (req, res) => {
+app.put('/likeCard/:id', async (req, res) => {
   try {
-    const { action } = req.body; 
-    
-    const card = await Card.findById(req.params.id);
-    if (!card) return res.status(404).json({ message: "Card no encontrada" });
+    const cardId = req.params.id;
+    const { liked } = req.body;
 
-    if (action === "like") {
-      card.likes += 1;
-    } else if (action === "unlike") {
-      card.likes = Math.max(0, card.likes - 1);
-    }
+    const card = await Card.findByIdAndUpdate(
+      cardId,
+      { liked: liked },
+      { new: true }
+    );
 
-    await card.save();
-
-    res.status(200).json({ message: "Like actualizado", likes: card.likes });
+    res.json(card);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: 'Error updating like' });
   }
 });
+
 
 
 const PORT = process.env.PORT || 3000;
