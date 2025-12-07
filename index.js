@@ -15,7 +15,7 @@ app.use(
       "https://exone.onrender.com"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type"]
   })
 );
 
@@ -23,18 +23,16 @@ app.use(express.json());
 
 
 
-const remoteHost = "https://api-9b-s7zy.onrender.com";
-
 const endpoints = [
-  { method: "GET", path: "/", description: "Página con lista de endpoints" },
-  { method: "POST", path: `${remoteHost}/createCard`, description: "Crear una nueva tarjeta" },
-  { method: "GET", path: `${remoteHost}/GetAllCards`, description: "Obtener todas las tarjetas" },
-  { method: "GET", path: `${remoteHost}/getCard/:id`, description: "Obtener una tarjeta por ID" },
-  { method: "GET", path: `${remoteHost}/hola`, description: "Endpoint de prueba" },
-  { method: "POST", path: `${remoteHost}/send`, description: "Enviar datos (user, email)" },
-  { method: "GET", path: `${remoteHost}/hello`, description: "Endpoint de prueba" },
-  { method: "GET", path: `${remoteHost}/api/datos`, description: "Obtener todos los registros del CSV" }
+  { method: "POST", path: "/createCard" },
+  { method: "GET", path: "/GetAllCards" },
+  { method: "GET", path: "/getCard/:id" },
+  { method: "POST", path: "/send" },
+  { method: "DELETE", path: "/deleteCard/:id" },
+  { method: "PUT", path: "/likeCard/:id" },
+  { method: "GET", path: "/api/datos" },
 ];
+
 
 app.get("/", (req, res) => {
   const html = `
