@@ -8,19 +8,19 @@ import csv from "csv-parser";
 const app = express();
 connectDB();
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://exone.onrender.com",
-    "https://api-9b-s7zy.onrender.com"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
-
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://exone.onrender.com"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
 
 app.use(express.json());
+
 
 
 const remoteHost = "https://api-9b-s7zy.onrender.com";
