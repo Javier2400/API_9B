@@ -7,7 +7,11 @@ const app = express();
 connectDB();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://exone.onrender.com"],
+  origin: [
+    "http://localhost:5173",
+    "https://exone.onrender.com",
+    "https://cardsreact.onrender.com"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
 }));
