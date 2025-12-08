@@ -18,6 +18,30 @@ app.use(cors({
 
 app.use(express.json());
 
+const endpoints = [
+  { method: "GET", path: "/", description: "Página con lista de endpoints" },
+  { method: "POST", path: "/createCard", description: "Crear una nueva tarjeta" },
+  { method: "GET", path: "/getAllCards", description: "Obtener todas las tarjetas" },
+  { method: "GET", path: "/getCard/:id", description: "Obtener una tarjeta por ID" },
+  { method: "DELETE", path: "/deleteCard/:id", description: "Eliminar tarjeta" },
+  { method: "PUT", path: "/likeCard/:id", description: "Actualizar like de tarjeta" },
+  { method: "POST", path: "/send", description: "Enviar datos (user, email)" },
+  { method: "GET", path: "/api/datos", description: "Obtener datos CSV" }
+];
+
+app.get("/", (req, res) => {
+  res.status(200).send(`
+    <html>
+      <head><title>API Endpoints</title></head>
+      <body>
+        <h1>API Endpoints</h1>
+        <pre>${JSON.stringify(endpoints, null, 2)}</pre>
+      </body>
+    </html>
+  `);
+});
+
+
 app.post("/createCard", async (req, res) => {
   try {
     const { name, link, description } = req.body;
