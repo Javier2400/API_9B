@@ -17,8 +17,8 @@ const cardSchema = new mongoose.Schema(
         trim: true,
     },
     like: {
-        type: Boolean,
-        default: false,
+        type: Number,
+        default: 0,
     }
 },
 {
